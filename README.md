@@ -4,6 +4,19 @@
 
 - [Introduction](#introduction)
 - [Methodology](#methodology)
+- [PRESENT Block Cipher](#present-block-cipher)
+    - [Key Schedule](#key-schedule)
+    - [PRESENT Encryption](#present-encryption)
+    - [PRESENT Decryption](#present-decryption)
+- [Verilog Implementation](#verilog-implementation)
+    - [PRESENT Encryptor](#present-encryptor)
+    - [PRESENT Decryptor](#present-decryptor)
+    - [Hamming Encoder and decoder](#hamming-encoder-and-decoder)
+    - [Transmitter](#transmitter)
+    - [Receiver](#receiver)
+    - [Transmitter Receiver Simulation Results](#transmitter-receiver-simulation-results)
+- [Conclusion](#conclusion)
+- [Reference](#reference)
 
 ---
 # Introduction
@@ -28,6 +41,16 @@ It operates on 64-bit data blocks and uses a simple substitution–permutation n
 The cipher is widely used in low-power and embedded security applications.
 
 Detailed specifications and algorithm steps for the PRESENT cipher are available in the [original paper](https://www.iacr.org/archive/ches2007/47270450/47270450.pdf).
+
+---
+## Key Schedule
+
+- Start with the master key (80-bit or 128-bit depending on variant).
+- For each encryption round, extract the leftmost 64 bits as the round key.
+- Rotate the key register by 61 bits to the left.
+- Apply the S-box to the leftmost 4 bits of the rotated key.
+- XOR the round counter value with a portion of the key register.
+- Repeat these steps for all 31 rounds to generate all round keys.
 
 ---
 ## PRESENT Encryption
@@ -201,7 +224,7 @@ The figure below shows the RTL schematic of the Receiver implementation.
 
 ---
 
-## Transmitter–Receiver Simulation Results
+## Transmitter Receiver Simulation Results
 
 A common testbench was developed to simulate the complete transmitter–receiver system. During simulation, single-bit errors were injected at one position in each of the four 16-bit chunks of the transmitted data. The system successfully detected and corrected these errors using the Hamming decoders before passing the data to the PRESENT decryptor for recovery.
 
@@ -228,8 +251,10 @@ The complete transmitter–receiver system successfully transmits encrypted data
 
 This project demonstrates the integration of the PRESENT lightweight block cipher with Hamming error correction in Verilog. By combining encryption and error correction, the design ensures both data confidentiality and reliability during transmission. The modular RTL implementation, along with testbench-based verification, confirms correct encryption, decryption, error detection, and single-bit error correction. Overall, the work highlights how cryptography and error correction can be effectively combined in hardware to achieve secure and robust communication systems.
 
+---
+# Reference
 
-
+[PRESENT: An Ultra-Lightweight Block Cipher](https://www.iacr.org/archive/ches2007/47270450/47270450.pdf).
 
 
 
